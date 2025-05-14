@@ -1,0 +1,29 @@
+# TODO: in progress, this is currently just a template that Copilot helped me with
+
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: fedora-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy to server
+        run: |
+          ssh -o StrictHostKeyChecking=no user@your-digitalocean-ip << EOF
+            cd /path/to/your/project
+            git pull origin main
+            # Add other deployment commands here, e.g., restarting services
+          EOF
